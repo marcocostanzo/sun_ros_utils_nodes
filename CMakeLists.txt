@@ -215,3 +215,12 @@ target_link_libraries(filter_float32
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(filter_float64_stamped
+  src/filter_float64_stamped_node.cpp
+)
+add_dependencies(filter_float64_stamped ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(filter_float64_stamped
+  ${catkin_LIBRARIES}
+)
+#########################################

@@ -1,5 +1,5 @@
 /*
-    ROS node to filter wrench stamped
+    ROS node to filter float64 stamped
 
     Copyright 2018 Università della Campania Luigi Vanvitelli
 
@@ -21,30 +21,20 @@
 
 #include "ros/ros.h"
 
-#include "geometry_msgs/WrenchStamped.h"
-#include "TF_MIMO/TF_MIMO_DIAGONAL.h"
+#include "sun_ros_msgs/Float64Stamped.h"
 #include "TF_SISO/TF_FIRST_ORDER_FILTER.h"
 
-
-using namespace TooN;
 using namespace std;
 
-ros::Publisher pubWrenchFilter;
-geometry_msgs::WrenchStamped msgWrenchFilter;
+ros::Publisher pubFloatFilter;
+sun_ros_msgs::Float64Stamped msgFloatFilter;
 
-Vector<6> wrench;
+double data;
 
 //==========TOPICs CALLBKs=========//
-void readV( const geometry_msgs::WrenchStamped::ConstPtr& msg  ){
+void readV( const sun_ros_msgs::Float64Stamped::ConstPtr& msg  ){
 
-    wrench[0] = msg->wrench.force.x;
-    wrench[1] = msg->wrench.force.y;
-    wrench[2] = msg->wrench.force.z;
-    wrench[3] = msg->wrench.torque.x;
-    wrench[4] = msg->wrench.torque.y;
-    wrench[5] = msg->wrench.torque.z;
-
-    msgWrenchFilter.header.frame_id = msg->header.frame_id;
+    data = msg->data;
 	
 }
 
@@ -54,7 +44,7 @@ void readV( const geometry_msgs::WrenchStamped::ConstPtr& msg  ){
 int main(int argc, char *argv[])
 {
 
-    ros::init(argc,argv,"filter_wrench_stamped");
+    ros::init(argc,argv,"filter_float64stamped");
 
     ros::NodeHandle nh_private("~");
     ros::NodeHandle nh_public = ros::NodeHandle();
@@ -74,38 +64,25 @@ int main(int argc, char *argv[])
 	/********************/
 
     /*******INIT ROS PUB**********/
-	//Wrench_filter pub
-	pubWrenchFilter = nh_public.advertise<geometry_msgs::WrenchStamped>( str_out_topic, 1);
+	//Float_filter pub
+	pubFloatFilter = nh_public.advertise<sun_ros_msgs::Float64Stamped>( str_out_topic, 1);
     /***************************/
 
     /*******INIT ROS SUB**********/
-	ros::Subscriber subWrench = nh_public.subscribe( str_in_topic , 1, readV);
+	ros::Subscriber subFloat = nh_public.subscribe( str_in_topic , 1, readV);
     /***************************/
 
     /******INIT FILTER************/
-    TF_MIMO_DIAGONAL filter(    6,
-                                TF_FIRST_ORDER_FILTER(cut_freq, 1.0/Hz), 
-                                1.0/Hz
-                            );
+    TF_FIRST_ORDER_FILTER filter(cut_freq, 1.0/Hz);
     /***************************/	
 
     /*============LOOP==============*/
     ros::Rate loop_rate(Hz);
 	while(ros::ok()){
 
-        Vector<6> wrench_filter = filter.apply( wrench );
-	
-        //Fill msg
-		msgWrenchFilter.wrench.force.x = wrench_filter[0];
-        msgWrenchFilter.wrench.force.y = wrench_filter[1];
-        msgWrenchFilter.wrench.force.z = wrench_filter[2];
-        msgWrenchFilter.wrench.torque.x = wrench_filter[3];
-        msgWrenchFilter.wrench.torque.y = wrench_filter[4];
-        msgWrenchFilter.wrench.torque.z = wrench_filter[5];
-
-        msgWrenchFilter.header.stamp = ros::Time::now();
-
-		pubWrenchFilter.publish( msgWrenchFilter );
+        msgFloatFilter.data = filter.apply( data );
+        msgFloatFilter.header.stamp = ros::Time::now();
+		pubFloatFilter.publish( msgFloatFilter );
 		loop_rate.sleep();
       	ros::spinOnce();
 			
