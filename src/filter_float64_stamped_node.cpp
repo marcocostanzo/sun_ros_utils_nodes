@@ -22,7 +22,7 @@
 #include "ros/ros.h"
 
 #include "sun_ros_msgs/Float64Stamped.h"
-#include "TF_SISO/TF_FIRST_ORDER_FILTER.h"
+#include "sun_systems_lib/TF/TF_FIRST_ORDER_FILTER.h"
 
 using namespace std;
 

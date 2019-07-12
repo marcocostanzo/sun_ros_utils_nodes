@@ -22,8 +22,8 @@
 #include "ros/ros.h"
 
 #include "geometry_msgs/WrenchStamped.h"
-#include "TF_MIMO/TF_MIMO_DIAGONAL.h"
-#include "TF_SISO/TF_FIRST_ORDER_FILTER.h"
+#include "sun_systems_lib/TF/TF_MIMO_DIAGONAL.h"
+#include "sun_systems_lib/TF/TF_FIRST_ORDER_FILTER.h"
 
 
 using namespace TooN;
@@ -84,8 +84,7 @@ int main(int argc, char *argv[])
 
     /******INIT FILTER************/
     TF_MIMO_DIAGONAL filter(    6,
-                                TF_FIRST_ORDER_FILTER(cut_freq, 1.0/Hz), 
-                                1.0/Hz
+                                TF_FIRST_ORDER_FILTER(cut_freq, 1.0/Hz)
                             );
     /***************************/	
 
