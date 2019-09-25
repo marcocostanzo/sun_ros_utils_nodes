@@ -224,3 +224,21 @@ target_link_libraries(filter_float64_stamped
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(scale_joint_state
+  src/scale_joint_state_node.cpp
+)
+add_dependencies(scale_joint_state ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(scale_joint_state
+  ${catkin_LIBRARIES}
+)
+#########################################
+#########################################
+add_executable(scale_wrench_stamped
+  src/scale_wrench_stamped_node.cpp
+)
+add_dependencies(scale_wrench_stamped ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(scale_wrench_stamped
+  ${catkin_LIBRARIES}
+)
+#########################################
