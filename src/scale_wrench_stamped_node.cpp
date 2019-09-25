@@ -4,7 +4,7 @@
 using namespace std;
 
 ros::Publisher pub;
-std::vector<double> scale;
+std::vector<double> scale, bias;
 
 void subCallback( geometry_msgs::WrenchStamped msg )
 {
@@ -12,12 +12,17 @@ void subCallback( geometry_msgs::WrenchStamped msg )
     msg.wrench.force.y *= scale[1];
     msg.wrench.force.z *= scale[2];
 
-    msg.wrench.force.x += 0.1;
-    msg.wrench.force.y += 0.1;
+    msg.wrench.force.x += bias[0];
+    msg.wrench.force.y += bias[1];
+    msg.wrench.force.z += bias[2];
 
     msg.wrench.torque.x *= scale[3];
     msg.wrench.torque.y *= scale[4];
     msg.wrench.torque.z *= scale[5];
+
+    msg.wrench.torque.x += bias[3];
+    msg.wrench.torque.y += bias[4];
+    msg.wrench.torque.z += bias[5];
 
     pub.publish(msg);
 
@@ -39,8 +44,20 @@ int main(int argc, char *argv[])
             exit(-1);
         }
     } else {
-        cout << "no param scale wrench" << endl;
-        exit(-1);
+        cout << "no param scale wrench using def [1 1 1 1 1 1]" << endl;
+        scale.clear();
+        for(int i=0; i<6; i++) scale.push_back(1.0);
+    }
+
+    if(nh_private.hasParam("bias")){
+        nh_private.getParam("bias", bias);
+        if(bias.size() != 6){
+            cout << "size bias wrench must be 6" << endl;
+            exit(-1);
+        }
+    } else {
+        bias.clear();
+        for(int i=0; i<6; i++) bias.push_back(0.0);
     }
 
     std::string topic_in_str, topic_out_str;
