@@ -242,3 +242,12 @@ target_link_libraries(scale_wrench_stamped
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(mov_av_wrench_stamped
+  src/mov_av_wrench_stamped_node.cpp
+)
+add_dependencies(mov_av_wrench_stamped ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(mov_av_wrench_stamped
+  ${catkin_LIBRARIES}
+)
+#########################################
