@@ -251,3 +251,12 @@ target_link_libraries(mov_av_wrench_stamped
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(wrench_bias
+  src/wrench_bias_node.cpp
+)
+add_dependencies(wrench_bias ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(wrench_bias
+  ${catkin_LIBRARIES}
+)
+#########################################
