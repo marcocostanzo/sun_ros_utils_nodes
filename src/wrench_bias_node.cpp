@@ -61,7 +61,9 @@ void read_wrench_cb( const geometry_msgs::WrenchStamped::ConstPtr& msg  ){
 bool compute_bias_service_cb(std_srvs::Trigger::Request &request,
                                   std_srvs::Trigger::Response &response)
 {
+    b_publish = false;
     compute_bias();
+    b_publish = true;
     response.message = "Bias Computed!";
     response.success = true;
     return true;
