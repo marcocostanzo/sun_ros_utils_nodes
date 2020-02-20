@@ -52,6 +52,7 @@
   <build_depend>sun_systems_lib</build_depend>
   <build_depend>sun_ros_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
+  <depend>roscpp</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
