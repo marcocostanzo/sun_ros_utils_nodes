@@ -24,6 +24,8 @@ namespace sun
 template <class MSG_CLASS>
 class FrequencyScalerNode
 {
+  using MSG_CLASS_CONST_PTR = typename MSG_CLASS::ConstPtr;
+
 protected:
   // Protected members
 
@@ -35,7 +37,7 @@ protected:
   bool msg_arrived_;
 
   // arrived msg
-  MSG_CLASS msg_;
+  MSG_CLASS_CONST_PTR msg_;
 
   // Publisher for the twist commands
   ros::Publisher pub_;
@@ -85,7 +87,7 @@ public:
     ROS_INFO_STREAM(output);
   }
 
-  void sub_cb_(const MSG_CLASS& msg)
+  void sub_cb_(const MSG_CLASS_CONST_PTR& msg)
   {
     msg_ = msg;
     msg_arrived_ = true;

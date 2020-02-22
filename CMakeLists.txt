@@ -262,20 +262,20 @@ target_link_libraries(wrench_bias
 )
 #########################################
 #########################################
-add_executable(wrench_frequency_scaler
-  src/frequency_scaler/wrench_frequency_scaler_node.cpp
+add_executable(wrench_stamped_frequency_scaler
+  src/frequency_scaler/wrench_stamped_frequency_scaler_node.cpp
 )
-add_dependencies(wrench_frequency_scaler ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(wrench_frequency_scaler
+add_dependencies(wrench_stamped_frequency_scaler ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(wrench_stamped_frequency_scaler
   ${catkin_LIBRARIES}
 )
 #########################################
 #########################################
-add_executable(twist_frequency_scaler
-  src/frequency_scaler/twist_frequency_scaler_node.cpp
+add_executable(twist_stamped_frequency_scaler
+  src/frequency_scaler/twist_stamped_frequency_scaler_node.cpp
 )
-add_dependencies(twist_frequency_scaler ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(twist_frequency_scaler
+add_dependencies(twist_stamped_frequency_scaler ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(twist_stamped_frequency_scaler
   ${catkin_LIBRARIES}
 )
 #########################################
