@@ -37,23 +37,26 @@ void wrench_in_cb_(const geometry_msgs::WrenchStamped::ConstPtr& msg)
 {
   try
   {
-    geometry_msgs::WrenchStamped out_msg;
+    if (pub.getNumSubscribers()) //Compute only if there are subscribers
+    {
+      geometry_msgs::WrenchStamped out_msg;
 
-    geometry_msgs::TransformStamped transform = tfBuffer->lookupTransform(
-        target_fame, msg->header.frame_id,
-        ros::Time(0),     // The time at which the value of the transform is desired. (0 will get the latest)
-        ros::Duration(0)  // How long to block before failing
-        );
+      geometry_msgs::TransformStamped transform = tfBuffer->lookupTransform(
+          target_fame, msg->header.frame_id,
+          ros::Time(0),     // The time at which the value of the transform is desired. (0 will get the latest)
+          ros::Duration(0)  // How long to block before failing
+          );
 
-    sun::wrench_transform(msg->wrench, out_msg.wrench, transform, use_pole);
-    out_msg.header.stamp = transform.header.stamp;
-    out_msg.header.frame_id = target_fame;
+      sun::wrench_transform(msg->wrench, out_msg.wrench, transform, use_pole);
+      out_msg.header.stamp = msg->header.stamp;
+      out_msg.header.frame_id = target_fame;
 
-    pub.publish(out_msg);
+      pub.publish(out_msg);
+    }
   }
   catch (const std::exception& e)
   {
-    ROS_ERROR_STREAM_THROTTLE(3.0,e.what());
+    ROS_ERROR_STREAM_THROTTLE(3.0, e.what());
   }
 }
 
