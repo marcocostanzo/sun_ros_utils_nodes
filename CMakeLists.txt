@@ -288,3 +288,12 @@ target_link_libraries(transform_wrench
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(transform_pose
+  src/transform_pose_node.cpp
+)
+add_dependencies(transform_pose ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(transform_pose
+  ${catkin_LIBRARIES}
+)
+#########################################
