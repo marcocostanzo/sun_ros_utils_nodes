@@ -85,8 +85,8 @@ int main(int argc, char *argv[])
     /******INIT FILTER************/
     TooN::Vector<> b = Ones(num_mean);
 
-    TF_MIMO_DIAGONAL filter(    6,
-                                TF_SISO(
+    sun::TF_MIMO_DIAGONAL filter(    6,
+                                sun::TF_SISO(
                                     b/((double)num_mean), 
                                     TooN::makeVector(1.0), 
                                     1.0/Hz)

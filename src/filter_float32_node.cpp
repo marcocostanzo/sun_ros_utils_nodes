@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     /***************************/
 
     /******INIT FILTER************/
-    TF_FIRST_ORDER_FILTER filter(cut_freq, 1.0/Hz);
+    sun::TF_FIRST_ORDER_FILTER filter(cut_freq, 1.0/Hz);
     /***************************/	
 
     /*============LOOP==============*/

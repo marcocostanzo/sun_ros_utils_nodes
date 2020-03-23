@@ -83,8 +83,8 @@ int main(int argc, char *argv[])
     /***************************/
 
     /******INIT FILTER************/
-    TF_MIMO_DIAGONAL filter(    6,
-                                TF_FIRST_ORDER_FILTER(cut_freq, 1.0/Hz)
+    sun::TF_MIMO_DIAGONAL filter(    6,
+                                sun::TF_FIRST_ORDER_FILTER(cut_freq, 1.0/Hz)
                             );
     /***************************/	
 
