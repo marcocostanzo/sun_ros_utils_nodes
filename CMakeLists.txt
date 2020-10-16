@@ -297,3 +297,12 @@ target_link_libraries(transform_pose
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(filter_twist_stamped
+  src/filter_twist_stamped_node.cpp
+)
+add_dependencies(filter_twist_stamped ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(filter_twist_stamped
+  ${catkin_LIBRARIES}
+)
+#########################################
