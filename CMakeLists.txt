@@ -315,3 +315,12 @@ target_link_libraries(differentiate_float64_stamped
   ${catkin_LIBRARIES}
 )
 #########################################
+#########################################
+add_executable(integrate_float64_stamped
+  src/integrate_float64_stamped_node.cpp
+)
+add_dependencies(integrate_float64_stamped ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(integrate_float64_stamped
+  ${catkin_LIBRARIES}
+)
+#########################################
