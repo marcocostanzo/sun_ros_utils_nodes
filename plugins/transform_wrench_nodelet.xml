@@ -1,0 +1,9 @@
+<library path="lib/libtransform_wrench_nodelet">
+  <class name="sun_ros_utils_nodes/TransformWrenchNodelet"
+     type="sun_ros_utils_nodes::TransformWrenchNodelet"
+     base_class_type="nodelet::Nodelet">
+    <description>
+     Nodelet TransformWrenchNodelet
+    </description>  
+    </class>
+</library>

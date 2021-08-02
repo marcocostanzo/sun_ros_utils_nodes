@@ -1,0 +1,9 @@
+<library path="lib/libtransform_wrench_virtual_stick_nodelet">
+  <class name="sun_ros_utils_nodes/TransformWrenchVirtualStickNodelet"
+     type="sun_ros_utils_nodes::TransformWrenchVirtualStickNodelet"
+     base_class_type="nodelet::Nodelet">
+    <description>
+     Nodelet TransformWrenchVirtualStickNodelet
+    </description>  
+    </class>
+</library>

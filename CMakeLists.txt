@@ -13,6 +13,10 @@ find_package(catkin REQUIRED COMPONENTS
   sun_ros_msgs
   geometry_msgs
   tf2_ros
+  nodelet
+  pluginlib
+  toon_ros_msg_conversion
+  sun_math_toolbox
 )
 
 ## System dependencies are found with CMake's conventions
@@ -104,8 +108,8 @@ catkin_package(
   CATKIN_DEPENDS
   roscpp
   INCLUDE_DIRS include
-  # LIBRARIES ${PROJECT_NAME}
-#  CATKIN_DEPENDS other_catkin_pkg
+  LIBRARIES transform_wrench_nodelet wrench_difference_nodelet transform_wrench_virtual_stick_nodelet
+ CATKIN_DEPENDS  nodelet pluginlib
 #  DEPENDS system_lib
 )
 
@@ -119,6 +123,31 @@ include_directories(
  include
 ${catkin_INCLUDE_DIRS}
 )
+
+add_library(transform_wrench_nodelet
+  src/${PROJECT_NAME}/transform_wrench_nodelet.cpp
+)
+add_dependencies(transform_wrench_nodelet ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(transform_wrench_nodelet
+${catkin_LIBRARIES}
+)
+
+add_library(wrench_difference_nodelet
+  src/${PROJECT_NAME}/wrench_difference_nodelet.cpp
+)
+add_dependencies(wrench_difference_nodelet ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(wrench_difference_nodelet
+${catkin_LIBRARIES}
+)
+
+add_library(transform_wrench_virtual_stick_nodelet
+  src/${PROJECT_NAME}/transform_wrench_virtual_stick_nodelet.cpp
+)
+add_dependencies(transform_wrench_virtual_stick_nodelet ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(transform_wrench_virtual_stick_nodelet
+${catkin_LIBRARIES}
+)
+
 
 # Declare a C++ library
 #  add_library(${PROJECT_NAME}
@@ -321,6 +350,15 @@ add_executable(integrate_float64_stamped
 )
 add_dependencies(integrate_float64_stamped ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(integrate_float64_stamped
+  ${catkin_LIBRARIES}
+)
+#########################################
+#########################################
+add_executable(wrench_difference
+  src/wrench_difference_node.cpp
+)
+add_dependencies(wrench_difference ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(wrench_difference
   ${catkin_LIBRARIES}
 )
 #########################################

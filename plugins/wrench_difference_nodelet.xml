@@ -1,0 +1,9 @@
+<library path="lib/libwrench_difference_nodelet">
+  <class name="sun_ros_utils_nodes/WrenchDifferenceNodelet"
+     type="sun_ros_utils_nodes::WrenchDifferenceNodelet"
+     base_class_type="nodelet::Nodelet">
+    <description>
+     Nodelet WrenchDifferenceNodelet
+    </description>  
+    </class>
+</library>
