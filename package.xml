@@ -68,6 +68,7 @@
     <nodelet plugin="${prefix}/plugins/transform_wrench_nodelet.xml" />
     <nodelet plugin="${prefix}/plugins/wrench_difference_nodelet.xml" />
     <nodelet plugin="${prefix}/plugins/transform_wrench_virtual_stick_nodelet.xml" />
+    <nodelet plugin="${prefix}/plugins/rotate_wrench_nodelet.xml" />
 
   </export>
 </package>

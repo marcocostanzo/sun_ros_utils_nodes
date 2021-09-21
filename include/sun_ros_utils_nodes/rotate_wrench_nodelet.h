@@ -7,36 +7,36 @@
 
 namespace sun_ros_utils_nodes {
 
-bool getPoseFromParam(ros::NodeHandle &nh, geometry_msgs::Pose &out,
-                      const std::string &param_name) {
-  std::map<std::string, double> map_s;
-  if (nh.hasParam(param_name)) {
-    try {
-      nh.getParam(param_name, map_s);
-      out.position.x = map_s["position_x"];
-      out.position.y = map_s["position_y"];
-      out.position.z = map_s["position_z"];
-      out.orientation.w = map_s["orientation_w"];
-      out.orientation.x = map_s["orientation_x"];
-      out.orientation.y = map_s["orientation_y"];
-      out.orientation.z = map_s["orientation_z"];
-
-      return true;
-    } catch (...) {
-      ROS_ERROR_STREAM("INVALID PARAM " << param_name);
-      return false;
-    }
-  } else {
-    return false;
-  }
-}
-
 /**
 Transfrorm a wrench i_i_w referred to pole of frame i and to axes of frame i
 to the wrench f_b_w referred to pole of frame b and to axes of frame b
 given the poses of the frames i and f both referred to a common frame b
 */
-class TransformWrenchVirtualStickNodelet : public nodelet::Nodelet {
+class RotateWrenchNodelet : public nodelet::Nodelet {
+
+  bool getPoseFromParam(ros::NodeHandle &nh, geometry_msgs::Pose &out,
+                        const std::string &param_name) {
+    std::map<std::string, double> map_s;
+    if (nh.hasParam(param_name)) {
+      try {
+        nh.getParam(param_name, map_s);
+        out.position.x = map_s["position_x"];
+        out.position.y = map_s["position_y"];
+        out.position.z = map_s["position_z"];
+        out.orientation.w = map_s["orientation_w"];
+        out.orientation.x = map_s["orientation_x"];
+        out.orientation.y = map_s["orientation_y"];
+        out.orientation.z = map_s["orientation_z"];
+
+        return true;
+      } catch (...) {
+        ROS_ERROR_STREAM("INVALID PARAM " << param_name);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 
 public:
   geometry_msgs::PoseStampedPtr b_P_i_;
@@ -46,15 +46,13 @@ public:
   ros::Subscriber sub_b_pose_i_;
   ros::Subscriber sub_b_pose_f_;
 
-  ros::Publisher f_b_wrench_pub_;
-
-  bool b_use_pole_ = false;
+  ros::Publisher i_f_wrench_pub_;
 
   std::vector<double> i_gains_vector;
 
   const std::vector<double> i_gains_default = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
 
-  ~TransformWrenchVirtualStickNodelet() = default;
+  ~RotateWrenchNodelet() = default;
 
   virtual void onInit() override {
 
@@ -66,7 +64,7 @@ public:
                      std::string("wrench_in"));
 
     std::string wrench_out_topic;
-    nh_private.param("f_b_wrench_topic", wrench_out_topic,
+    nh_private.param("i_f_wrench_topic", wrench_out_topic,
                      std::string("wrench_out"));
 
     nh_private.param("i_gains", i_gains_vector, i_gains_default);
@@ -96,26 +94,23 @@ public:
       b_P_f_->pose = b_P_f_initial_;
     }
 
-    sub_i_i_wrench_ =
-        nh.subscribe(wrench_in_topic, 1,
-                     &TransformWrenchVirtualStickNodelet::wrench_in_cb, this);
+    sub_i_i_wrench_ = nh.subscribe(wrench_in_topic, 1,
+                                   &RotateWrenchNodelet::wrench_in_cb, this);
 
     if (!b_P_i_topic_str_.empty()) {
       boost::function<void(const geometry_msgs::PoseStampedPtr &)> f =
-          boost::bind(&TransformWrenchVirtualStickNodelet::pose_cb, this, _1,
-                      &b_P_i_);
+          boost::bind(&RotateWrenchNodelet::pose_cb, this, _1, &b_P_i_);
       sub_b_pose_i_ =
           nh.subscribe<geometry_msgs::PoseStamped>(b_P_i_topic_str_, 1, f);
     }
     if (!b_P_f_topic_str_.empty()) {
       boost::function<void(const geometry_msgs::PoseStampedPtr &)> f =
-          boost::bind(&TransformWrenchVirtualStickNodelet::pose_cb, this, _1,
-                      &b_P_f_);
+          boost::bind(&RotateWrenchNodelet::pose_cb, this, _1, &b_P_f_);
       sub_b_pose_f_ =
           nh.subscribe<geometry_msgs::PoseStamped>(b_P_f_topic_str_, 1, f);
     }
 
-    f_b_wrench_pub_ =
+    i_f_wrench_pub_ =
         nh.advertise<geometry_msgs::WrenchStamped>(wrench_out_topic, 1);
   }
 
@@ -135,23 +130,19 @@ public:
       }
 
       auto b_R_i = b_T_i.slice<0, 0, 3, 3>();
-      auto b_r_i = b_T_i[3].slice<0, 3>();
-      auto b_r_f = b_T_f[3].slice<0, 3>();
-      auto b_r_f_i = b_r_f - b_r_i;
+      auto b_R_f = b_T_f.slice<0, 0, 3, 3>();
+      auto f_R_i = b_R_f.T() * b_R_i;
 
-      TooN::Vector<6> i_b_wrench = rotateWrench(b_R_i, i_i_wrench);
-
-      TooN::Vector<6> f_b_wrench = i_b_wrench;
-      f_b_wrench.slice<3, 3>() += (b_r_f_i ^ i_b_wrench.slice<0, 3>());
+      TooN::Vector<6> i_f_wrench = rotateWrench(f_R_i, i_i_wrench);
 
       geometry_msgs::WrenchStampedPtr wrench_out(
           new geometry_msgs::WrenchStamped);
 
-      wrench_out->wrench = sun::TooN2wrench(f_b_wrench);
+      wrench_out->wrench = sun::TooN2wrench(i_f_wrench);
 
       wrench_out->header.stamp = ros::Time::now();
 
-      f_b_wrench_pub_.publish(wrench_out);
+      i_f_wrench_pub_.publish(wrench_out);
     }
   }
 

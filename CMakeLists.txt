@@ -108,7 +108,7 @@ catkin_package(
   CATKIN_DEPENDS
   roscpp
   INCLUDE_DIRS include
-  LIBRARIES transform_wrench_nodelet wrench_difference_nodelet transform_wrench_virtual_stick_nodelet
+  LIBRARIES transform_wrench_nodelet wrench_difference_nodelet transform_wrench_virtual_stick_nodelet rotate_wrench_nodelet
  CATKIN_DEPENDS  nodelet pluginlib
 #  DEPENDS system_lib
 )
@@ -145,6 +145,14 @@ add_library(transform_wrench_virtual_stick_nodelet
 )
 add_dependencies(transform_wrench_virtual_stick_nodelet ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(transform_wrench_virtual_stick_nodelet
+${catkin_LIBRARIES}
+)
+
+add_library(rotate_wrench_nodelet
+  src/${PROJECT_NAME}/rotate_wrench_nodelet.cpp
+)
+add_dependencies(rotate_wrench_nodelet ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rotate_wrench_nodelet
 ${catkin_LIBRARIES}
 )
 

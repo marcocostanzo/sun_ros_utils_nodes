@@ -1,0 +1,9 @@
+<library path="lib/librotate_wrench_nodelet">
+  <class name="sun_ros_utils_nodes/RotateWrenchNodelet"
+     type="sun_ros_utils_nodes::RotateWrenchNodelet"
+     base_class_type="nodelet::Nodelet">
+    <description>
+     Nodelet RotateWrenchNodelet
+    </description>  
+    </class>
+</library>
